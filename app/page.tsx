@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import { useState, useEffect } from "react";
 import { filesData } from "@/lib/data";
 import { Header } from "@/components/ui/Header";
 import { Sidebar } from "@/components/ui/Sidebar";
@@ -11,7 +10,17 @@ import { EmptyState } from "@/components/ui/EmptyState";
 export default function DrivePage() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isLoading, setIsLoading] = useState(true); // <-- State loading baru
   const hasFiles = filesData.length > 0;
+
+  // Simulasi fetching data saat komponen pertama kali dimuat
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // <-- Tampilkan skeleton selama 1.5 detik
+
+    return () => clearTimeout(timer); // Cleanup timer
+  }, []);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
@@ -30,14 +39,18 @@ export default function DrivePage() {
 
       {/* Konten Utama */}
       <main className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col overflow-y-auto">
-        <div className="flex items-center justify-between mb-8 w-full">
-            <h1 className="text-3xl font-bold">Beranda</h1>
-            <button className="flex sm:hidden items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors font-semibold">
-                <Plus size={20} />
-            </button>
-        </div>
+        <h1 className="text-3xl font-bold mb-8">Beranda</h1>
+        
         <Header onMenuClick={toggleSidebar} viewMode={viewMode} onViewChange={setViewMode} />
-        {hasFiles ? <FileAccess viewMode={viewMode} /> : <EmptyState />}
+        
+        {isLoading ? (
+            <FileAccess viewMode={viewMode} isLoading={true} />
+        ) : hasFiles ? (
+            <FileAccess viewMode={viewMode} isLoading={false} />
+        ) : (
+            <EmptyState />
+        )}
+
       </main>
     </div>
   );
