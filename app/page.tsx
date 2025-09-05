@@ -1,103 +1,160 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import {
+  File,
+  Folder,
+  Home,
+  Plus,
+  Search,
+  Settings,
+  Star,
+  Trash2,
+  Users,
+  Clock,
+  UserCircle2,
+  Menu,
+} from "lucide-react";
+
+// ============================================================================
+// KOMPONEN-KOMPONEN LOKAL
+// Semua komponen didefinisikan di sini untuk menghindari error impor
+// ============================================================================
+
+// --- Komponen Sidebar ---
+type NavItemProps = {
+  icon: React.ReactNode;
+  label: string;
+  isActive?: boolean;
+};
+
+const NavItem = ({ icon, label, isActive = false }: NavItemProps) => {
+  const activeClasses = isActive
+    ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
+    : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800";
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <a href="#" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${activeClasses}`}>
+      {icon}
+      <span>{label}</span>
+    </a>
+  );
+};
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const SidebarContent = () => (
+    <div className="w-64 h-full bg-white dark:bg-gray-900/50 p-6 flex flex-col justify-between border-r border-gray-200 dark:border-gray-800">
+        <div>
+            <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-500 mb-12">MyDrive</h1>
+            <nav className="flex flex-col gap-2">
+                <NavItem icon={<Home size={20} />} label="Beranda" isActive />
+                <NavItem icon={<Folder size={20} />} label="File Saya" />
+                <NavItem icon={<Users size={20} />} label="Dibagikan" />
+                <NavItem icon={<Clock size={20} />} label="Terbaru" />
+                <NavItem icon={<Star size={20} />} label="Berbintang" />
+                <NavItem icon={<Trash2 size={20} />} label="Sampah" />
+            </nav>
         </div>
+        <div>
+            <NavItem icon={<Settings size={20} />} label="Pengaturan" />
+        </div>
+    </div>
+);
+
+
+// --- Komponen Header ---
+type HeaderProps = {
+  onMenuClick: () => void;
+};
+
+const Header = ({ onMenuClick }: HeaderProps) => (
+  <header className="flex justify-between items-center mb-8 w-full">
+    <div className="flex items-center gap-4">
+      <button onClick={onMenuClick} className="lg:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle Menu">
+        <Menu size={24} />
+      </button>
+      <div className="relative w-full max-w-xs sm:max-w-sm">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+        <input type="text" placeholder="Cari di Drive..." className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow" />
+      </div>
+    </div>
+    <div className="flex items-center gap-4">
+      <button className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors font-semibold">
+        <Plus size={20} /> Tambah Baru
+      </button>
+      <UserCircle2 size={36} className="text-gray-500" />
+    </div>
+  </header>
+);
+
+// --- Komponen WelcomeBanner ---
+const WelcomeBanner = () => (
+  <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-8 mb-8">
+    <h1 className="text-3xl font-bold text-white">Selamat Datang Kembali!</h1>
+    <p className="text-blue-100 mt-2">Semua file Anda aman dan terorganisir.</p>
+  </div>
+);
+
+// --- Komponen FileGrid ---
+const filesData = [
+  { name: "Proposal Proyek Q4.pdf", type: "file" as const, size: "2.1 MB" },
+  { name: "Aset Desain", type: "folder" as const, size: "128 MB" },
+  { name: "Foto Event 2025", type: "folder" as const, size: "3.2 GB" },
+  { name: "Laporan Bulanan.xlsx", type: "file" as const, size: "850 KB" },
+];
+
+type FileCardProps = { name: string; type: "file" | "folder"; size: string; };
+
+const FileCard = ({ name, type, size }: FileCardProps) => (
+  <div className="bg-white dark:bg-gray-900 p-5 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-blue-500 hover:shadow-sm transition-all cursor-pointer group">
+    <div className="flex items-center gap-4 mb-3">
+      {type === "folder" ? <Folder className="text-blue-500" size={28} strokeWidth={1.5} /> : <File className="text-gray-400" size={28} strokeWidth={1.5} />}
+      <span className="font-semibold text-gray-800 dark:text-gray-200 truncate">{name}</span>
+    </div>
+    <p className="text-sm text-gray-500 dark:text-gray-400 pl-11">{size}</p>
+  </div>
+);
+
+const FileGrid = () => (
+  <div>
+    <h2 className="text-xl font-semibold mb-4">Akses Cepat</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+      {filesData.map((file, index) => <FileCard key={index} {...file} />)}
+    </div>
+  </div>
+);
+
+
+// ============================================================================
+// KOMPONEN HALAMAN UTAMA
+// ============================================================================
+
+export default function DrivePage() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  return (
+    <div className="flex h-screen w-full bg-gray-100 dark:bg-black overflow-hidden">
+      {/* Sidebar Desktop */}
+      <div className="hidden lg:block flex-shrink-0">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 lg:hidden" onClick={toggleSidebar}></div>}
+
+      {/* Mobile Sidebar Content */}
+      <div className={`fixed top-0 left-0 h-full z-30 transition-transform transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:hidden`}>
+        <SidebarContent />
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col overflow-y-auto">
+        <Header onMenuClick={toggleSidebar} />
+        <WelcomeBanner />
+        <FileGrid />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
