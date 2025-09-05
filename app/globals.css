@@ -1,7 +1,19 @@
+@import "nprogress/nprogress.css";
 @import "tailwindcss";
 
+/* Kustomisasi warna bar progres (opsional) */
+#nprogress .bar {
+  background: #007bff !important; /* Warna biru primer */
+  height: 3px !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #007bff !important;
+  border-left-color: #007bff !important;
+}
+
 :root {
-  --background: #f8f9fa; /* Sedikit lebih lembut dari putih */
+  --background: #f8f9fa;
   --foreground: #212529;
   --sidebar-bg: #ffffff;
   --border-color: #dee2e6;
@@ -36,5 +48,5 @@ body {
 
 h1, h2, h3 {
   font-family: var(--font-geist-sans), sans-serif;
-  font-weight: 600; /* Lebih tebal untuk judul */
+  font-weight: 600;
 }

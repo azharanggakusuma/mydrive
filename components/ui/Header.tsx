@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 export type HeaderProps = {
-  onMenuClick: () => void;
+  onMenuClick?: () => void;
   viewMode: 'grid' | 'list';
   onViewChange: (mode: 'grid' | 'list') => void;
 };
@@ -26,11 +26,9 @@ export const Header = ({ onMenuClick, viewMode, onViewChange }: HeaderProps) => 
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {/* Tombol Tambah Baru untuk Desktop */}
         <button className="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
           <Plus size={20} /> Tambah Baru
         </button>
-        {/* Tombol View & User Icon */}
         <div className="hidden sm:flex items-center bg-gray-200 dark:bg-gray-800 p-1 rounded-full">
             <button onClick={() => onViewChange('grid')} className={`p-2 rounded-full transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 text-blue-500' : 'text-gray-500 hover:text-blue-500'}`}>
                 <LayoutGrid size={20} />
@@ -43,7 +41,6 @@ export const Header = ({ onMenuClick, viewMode, onViewChange }: HeaderProps) => 
       </div>
     </header>
 
-    {/* [BARU] Floating Action Button (FAB) untuk Mobile */}
     <div className="fixed sm:hidden bottom-6 right-6 z-40">
         <button className="flex items-center justify-center w-14 h-14 bg-blue-600 rounded-full text-white shadow-lg hover:bg-blue-700 transition-all transform hover:scale-110">
             <Plus size={28} />
