@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MyDrive - Simpan dan Bagikan File Anda dengan Mudah",
+  title: "MyDrive",
   description: "Simpan dan bagikan file Anda dengan mudah menggunakan MyDrive.",
 };
 
